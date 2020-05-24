@@ -1,7 +1,7 @@
 {
   "name": "three-asset-store",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "loading and saving assets",
   "private": true,
   "main": "assetStore.js",
   "scripts": {
@@ -12,8 +12,12 @@
     "lint": "eslint src/**/*.{js,ts} --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:shilaca/three-asset-store.git"
+  },
   "keywords": [],
-  "author": "",
+  "author": "shilaca",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.9.6",
