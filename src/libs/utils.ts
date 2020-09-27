@@ -76,7 +76,8 @@ export async function loadAsset<T>(
   loader: AssetLoader | undefined,
   canIDB: boolean,
   dbName: string,
-  storeName: string
+  storeName: string,
+  self = globalThis
 ): Promise<T> {
   if (!loader) {
     return Promise.reject(
@@ -100,10 +101,10 @@ export async function loadAsset<T>(
     }
     // const file = new File([blob], 'url')
     console.log(_asset, blob)
-    const blobURL = URL.createObjectURL(blob)
+    const blobURL = self.URL.createObjectURL(blob)
     return loader.load<T>(blobURL, {
       isBlob: true,
-      extensions: url.split('.').slice(-1)[0]
+      extensions: url.split('.').slice(-1)[0],
     })
   } else {
     return loader.load<T>(url).then(async content => {

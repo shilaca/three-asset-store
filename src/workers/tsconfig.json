@@ -1,5 +1,5 @@
 {
-  "extends": "../generic-tsconfig.json",
+  "extends": "../../generic-tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "lib": ["es5", "es6", "webworker"]

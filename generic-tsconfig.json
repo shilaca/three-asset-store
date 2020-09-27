@@ -4,21 +4,23 @@
     "module": "es2015",
     "moduleResolution": "node",
     "strict": true,
+    "skipLibCheck": true,
     "removeComments": true,
-    "declarationMap": false,
-    "declarationDir": "../types",
-    "sourceMap": false,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "./dist/types",
+    "sourceMap": true,
     "composite": true,
-    "rootDir": "./"
+    "rootDir": "./src"
   },
   "files": [
     "@types/shader-shim.d.ts"
   ],
   "include": [
-    "../**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "spec/**/*"
   ]
 }

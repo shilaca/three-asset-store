@@ -2,6 +2,7 @@ import { Loader, ImageBitmapLoader } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 interface _Loader extends Loader {
   load: (
     url: string,
@@ -11,8 +12,8 @@ interface _Loader extends Loader {
   ) => void
 }
 
-interface LoaderSettings {
-  rootDir: string
+export interface LoaderSettings {
+  dracoDir: string
 }
 
 interface LoadOptions {
@@ -21,7 +22,7 @@ interface LoadOptions {
 }
 
 export class AssetLoader {
-  private rootDir: string
+  private dracoDir: string
 
   private _imageBitmapLoader: ImageBitmapLoader | undefined
   private get imageBitmapLoader(): ImageBitmapLoader {
@@ -36,9 +37,7 @@ export class AssetLoader {
   private get gltfLoader(): GLTFLoader {
     if (!this._gltfLoader) {
       const dracoLoader = new DRACOLoader()
-      dracoLoader.setDecoderPath(
-        `${this.rootDir}/node_modules/three/example/js/libs/draco`
-      )
+      dracoLoader.setDecoderPath(this.dracoDir)
       this._gltfLoader = new GLTFLoader()
       this._gltfLoader.setDRACOLoader(dracoLoader)
       console.log(this._gltfLoader.dracoLoader)
@@ -46,8 +45,8 @@ export class AssetLoader {
     return this._gltfLoader
   }
 
-  constructor(settings?: Partial<LoaderSettings>) {
-    this.rootDir = settings?.rootDir || '~'
+  constructor(settings: LoaderSettings) {
+    this.dracoDir = settings.dracoDir
   }
 
   load<T>(url: string, loadOptions?: Partial<LoadOptions>): Promise<T> {

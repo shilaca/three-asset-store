@@ -1,17 +1,17 @@
 import { AssetLoader } from '../libs/loader'
 import {
   LoaderWorkerMessageData,
-  LoaderWorkerMessageErrorData,
-  LoaderWorkerMessageLoadData
+  LoaderWorkerResponseData,
+  LoaderWorkerResponseErrorData,
+  LoaderWorkerResponseLoadData
 } from '../models/loader'
 import {
   INDEXED_DATABASE_DEFAULT_NAME,
   INDEXED_DATABASE_ASSET_STORE_NAME
 } from '../constants'
-import {
-  initializeIndexedDB,
-  loadAsset
-} from '../libs/utils'
+import { initializeIndexedDB, loadAsset } from '../libs/utils'
+
+export default {} as typeof Worker & (new () => Worker)
 
 const canIDB = 'indexedDB' in globalThis
 const dbName = INDEXED_DATABASE_DEFAULT_NAME
@@ -20,14 +20,39 @@ let dbVersion: number | undefined
 
 let loader: AssetLoader | undefined
 
-const ctx: Worker = self as any
+function initIDB() {
+  return canIDB
+    ? initializeIndexedDB(dbName, assetStoreName).then(version => {
+        dbVersion = version
+        return undefined
+      })
+    : Promise.resolve()
+}
+
+function errorData(error: any): LoaderWorkerResponseErrorData {
+  return {
+    type: 'error',
+    error
+  }
+}
+
+const ctx = globalThis
+
+function response(
+  data: LoaderWorkerResponseData,
+  transfer: Transferable[] = []
+): void {
+  const options: any = transfer
+  ctx.postMessage(data, options)
+}
+
 ctx.addEventListener('message', async (event: MessageEvent) => {
   const data: LoaderWorkerMessageData = event.data
   switch (data.type) {
     case 'initialize':
       loader = new AssetLoader(data.settings)
       initIDB().then(() => {
-        ctx.postMessage({ type: data.type, state: 'end' })
+        response({ type: 'initialize' })
       })
       break
 
@@ -43,43 +68,24 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
             dbName,
             assetStoreName
           )
-          const result: LoaderWorkerMessageLoadData = {
+          const result: LoaderWorkerResponseLoadData = {
             type: data.type,
             url: data.url,
             content
           }
           console.log(content, result)
-          ctx.postMessage(result)
+          response(result)
         } catch (err) {
           console.error(err)
-          ctx.postMessage(errorData(err))
+          response(errorData(err))
         }
       } else {
-        ctx.postMessage(errorData('Failed to initialize Loader'))
+        response(errorData('Failed to initialize Loader'))
       }
       break
 
-    default:
-      ctx.postMessage(errorData(`type: ${data.type} is not defined`))
-      break
+    // default:
+    //   response(errorData(`type: ${data.type} is not defined`))
+    //   break
   }
 })
-
-function errorData(error: any): LoaderWorkerMessageErrorData {
-  return {
-    type: 'error',
-    error
-  }
-}
-
-export default {} as typeof Worker & (new () => Worker)
-
-/// // for IDB
-function initIDB() {
-  return canIDB
-    ? initializeIndexedDB(dbName, assetStoreName).then(version => {
-        dbVersion = version
-        return undefined
-      })
-    : Promise.resolve()
-}

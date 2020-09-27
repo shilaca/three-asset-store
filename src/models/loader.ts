@@ -1,9 +1,19 @@
+import { LoaderSettings } from '../libs/loader'
+
+/**
+ * The types of message and response are paired
+ * */
+
+export type LoaderWorkerMessageData =
+  | LoaderWorkerMessageInitializeData
+  | LoaderWorkerMessageLoadData
+export type LoaderWorkerMessageDataType = Pick<
+  LoaderWorkerMessageData,
+  'type'
+>['type']
 export interface LoaderWorkerMessageInitializeData {
-  type: 'initialize',
-  settings?: Partial<{
-    rootDir: string
-  }>,
-  state: 'start' | 'end'
+  type: 'initialize'
+  settings: LoaderSettings
 }
 export interface LoaderWorkerMessageLoadData {
   type: 'load'
@@ -11,13 +21,19 @@ export interface LoaderWorkerMessageLoadData {
   content: any
 }
 
-export interface LoaderWorkerMessageErrorData {
+export type LoaderWorkerResponseData =
+  | LoaderWorkerResponseInitializeData
+  | LoaderWorkerResponseLoadData
+  | LoaderWorkerResponseErrorData
+export interface LoaderWorkerResponseInitializeData {
+  type: 'initialize'
+}
+export interface LoaderWorkerResponseLoadData {
+  type: 'load'
+  url: string
+  content: any
+}
+export interface LoaderWorkerResponseErrorData {
   type: 'error'
   error: any
 }
-
-export type LoaderWorkerMessageData =
-  | LoaderWorkerMessageInitializeData
-  | LoaderWorkerMessageLoadData
-  | LoaderWorkerMessageErrorData
-export type LoaderWorkerMessageDataType = Pick<LoaderWorkerMessageData, 'type'>['type']

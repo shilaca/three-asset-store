@@ -1,16 +1,13 @@
 import { AssetLoader } from './libs/loader'
-import Worker from './worker/loader.worker'
+import Worker from './workers/loader.worker'
 import {
   LoaderWorkerMessageDataType,
   LoaderWorkerMessageData,
   LoaderWorkerMessageInitializeData,
-  LoaderWorkerMessageLoadData
+  LoaderWorkerMessageLoadData,
+  LoaderWorkerResponseData
 } from './models/loader'
-import {
-  initializeIndexedDB,
-  loadAsset,
-  getFromDB
-} from './libs/utils'
+import { initializeIndexedDB, loadAsset, getFromDB } from './libs/utils'
 import {
   INDEXED_DATABASE_DEFAULT_NAME,
   INDEXED_DATABASE_ASSET_STORE_NAME,
@@ -20,8 +17,8 @@ import {
 import { Asset } from './models/assetStore'
 
 interface AssetStoreSettings {
-  rootDir: string
-  dbName: string
+  dracoDir: string
+  dbName?: string
 }
 
 interface LoadParameters {
@@ -42,7 +39,7 @@ export class AssetStore {
   private dbVersion: number | undefined
   private readonly assetStoreName: string = INDEXED_DATABASE_ASSET_STORE_NAME
 
-  constructor(private settings?: Partial<AssetStoreSettings>) {
+  constructor(private settings: AssetStoreSettings) {
     this.canWorker = 'Worker' in globalThis
     // this.canWorker = false
 
@@ -52,9 +49,12 @@ export class AssetStore {
 
     this.assets = []
     this.initialized = false
+
+    console.log('can worker', this.canWorker)
   }
 
   initialize(): Promise<void> {
+    console.log('initialize')
     const initIDB = () =>
       this.canIDB
         ? initializeIndexedDB(this.dbName, this.assetStoreName).then(
@@ -79,8 +79,7 @@ export class AssetStore {
           )
           const data: LoaderWorkerMessageInitializeData = {
             type: 'initialize',
-            settings: this.settings,
-            state: 'start'
+            settings: this.settings
           }
           this.loaderWorker.postMessage(data)
           this.getOneMessageFromLoaderWorker('initialize')
@@ -92,7 +91,10 @@ export class AssetStore {
         }
       })
 
-    return Promise.all([initIDB(), initializeLoader()]).then(() => {
+    return Promise.all([
+      initIDB().then(_ => console.log('fin init idb')),
+      initializeLoader().then(_ => console.log('fin init loader'))
+    ]).then(() => {
       this.initialized = true
     })
   }
@@ -188,11 +190,11 @@ export class AssetStore {
    */
   private getOneMessageFromLoaderWorker(
     type: LoaderWorkerMessageDataType
-  ): Promise<LoaderWorkerMessageData | undefined> {
+  ): Promise<LoaderWorkerResponseData | undefined> {
     let func: (event: MessageEvent) => void
     let id: ReturnType<typeof setTimeout> | null
 
-    return new Promise<LoaderWorkerMessageData>((resolve, reject) => {
+    return new Promise<LoaderWorkerResponseData>((resolve, reject) => {
       if (!this.loaderWorker) return resolve()
       const _func = (event: MessageEvent): void => {
         if (event.data.type === type) {
