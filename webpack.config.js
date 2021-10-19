@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const Sass = require('sass')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = (env, argv) => {
@@ -21,12 +23,14 @@ module.exports = (env, argv) => {
       umdNamedDefine: true
     },
     optimization: {
-      minimizer: [new TerserPlugin({}), new OptimizeCssAssetsPlugin({})]
+      minimizer: [new TerserPlugin({}), new CssMinimizerPlugin({})]
     },
     devtool: IS_DEV ? 'source-map' : '',
     devServer: {
       contentBase: path.resolve(__dirname, 'dist'),
       watchContentBase: true,
+      hot: true,
+      host: '0.0.0.0',
       port: 3000,
       historyApiFallback: true
     },
@@ -39,8 +43,8 @@ module.exports = (env, argv) => {
           test: /\.worker\.(js|ts)$/,
           loader: 'worker-loader',
           options: {
-            name: 'workers/[name].js',
-            inline: true
+            filename: 'workers/' + (IS_DEV ? '[name].js' : '[name].[hash].js'),
+            inline: 'fallback'
           }
         },
         {
@@ -66,18 +70,21 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(glsl|vert|frag|vs|fs)$/,
-          use: ['raw-loader'],
+          type: 'asset/source',
           exclude: /node_modules/
         }
       ]
     },
     plugins: [
-      new CleanWebpackPlugin({
-        exclude: ['assets']
-      }),
-      new CopyWebpackPlugin({
-        patterns: [{ from: 'src/assets', to: 'assets' }]
-      })
+      // new HtmlWebpackPlugin({
+      //   template: './src/index.html'
+      // }),
+      // new MiniCssExtractPlugin({
+      //   filename: './css/style-[hash].css'
+      // }),
+      // new CopyWebpackPlugin({
+      //   patterns: [{ from: 'src/assets', to: 'assets' }]
+      // })
     ]
   }
 }

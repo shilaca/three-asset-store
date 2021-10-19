@@ -190,11 +190,11 @@ export class AssetStore {
    */
   private getOneMessageFromLoaderWorker(
     type: LoaderWorkerMessageDataType
-  ): Promise<LoaderWorkerResponseData | undefined> {
+  ): Promise<LoaderWorkerResponseData | void> {
     let func: (event: MessageEvent) => void
     let id: ReturnType<typeof setTimeout> | null
 
-    return new Promise<LoaderWorkerResponseData>((resolve, reject) => {
+    return new Promise<LoaderWorkerResponseData | void>((resolve, reject) => {
       if (!this.loaderWorker) return resolve()
       const _func = (event: MessageEvent): void => {
         if (event.data.type === type) {

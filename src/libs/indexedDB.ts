@@ -41,14 +41,7 @@ export function put(
 export function get(
   dbName: string,
   storeName: string,
-  keyValue:
-    | string
-    | number
-    | Date
-    | ArrayBufferView
-    | ArrayBuffer
-    | IDBArrayKey
-    | IDBKeyRange
+  keyValue: string | number | Date | ArrayBufferView | ArrayBuffer | IDBKeyRange
 ): Promise<any> {
   return connect(dbName).then(
     db =>
@@ -76,14 +69,7 @@ export function get(
 export function del(
   dbName: string,
   storeName: string,
-  keyValue:
-    | string
-    | number
-    | Date
-    | ArrayBufferView
-    | ArrayBuffer
-    | IDBArrayKey
-    | IDBKeyRange
+  keyValue: string | number | Date | ArrayBufferView | ArrayBuffer | IDBKeyRange
 ): Promise<void> {
   return connect(dbName).then(
     db =>
