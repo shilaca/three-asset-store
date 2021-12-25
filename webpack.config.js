@@ -17,6 +17,7 @@ module.exports = (env, argv) => {
     output: {
       filename: './[name].js',
       path: path.resolve(__dirname, 'dist'),
+      publicPath: '',
       library: 'AssetStore',
       libraryTarget: 'umd',
       globalObject: "(typeof self !== 'undefined' ? self : this)",
@@ -25,7 +26,7 @@ module.exports = (env, argv) => {
     optimization: {
       minimizer: [new TerserPlugin({}), new CssMinimizerPlugin({})]
     },
-    devtool: IS_DEV ? 'source-map' : '',
+    devtool: IS_DEV ? 'source-map' : undefined,
     devServer: {
       contentBase: path.resolve(__dirname, 'dist'),
       watchContentBase: true,

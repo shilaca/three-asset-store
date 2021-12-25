@@ -14,7 +14,8 @@
     "rootDir": "./src"
   },
   "files": [
-    "@types/shader-shim.d.ts"
+    "@types/shader-shim.d.ts",
+    "@types/three-shim.d.ts"
   ],
   "include": [
     "src/**/*"

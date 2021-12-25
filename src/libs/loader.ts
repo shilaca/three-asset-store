@@ -1,8 +1,8 @@
 import { Loader, ImageBitmapLoader } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module'
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
 interface _Loader extends Loader {
   load: (
     url: string,
@@ -39,8 +39,8 @@ export class AssetLoader {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath(this.dracoDir)
       this._gltfLoader = new GLTFLoader()
-      this._gltfLoader.setDRACOLoader(dracoLoader)
-      console.log(this._gltfLoader.dracoLoader)
+        .setDRACOLoader(dracoLoader)
+        .setMeshoptDecoder(MeshoptDecoder)
     }
     return this._gltfLoader
   }
