@@ -58,8 +58,6 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
 
     case 'load':
       if (loader) {
-        console.log('load')
-
         try {
           const content = await loadAsset<any>(
             data.url,
@@ -73,7 +71,6 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
             url: data.url,
             content
           }
-          console.log(content, result)
           response(result)
         } catch (err) {
           console.error(err)

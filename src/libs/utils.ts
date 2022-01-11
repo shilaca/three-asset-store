@@ -51,7 +51,6 @@ export async function getFromDB<T>(
     const asset = await IDB.get(dbName, storeName, url).catch(error =>
       Promise.reject(error)
     )
-    console.log('idb', asset)
     return Promise.resolve(asset)
   } else {
     return Promise.reject(new Error(`IndexedDB is not available.`))
@@ -92,19 +91,15 @@ export async function loadAsset<T>(
     const _asset = await getFromDB<Blob>(url, canIDB, dbName, storeName)
     const blob = _asset ? _asset.content : await toBlob(url)
     if (!_asset) {
-      await saveToDB(
-        { url, content: blob },
-        canIDB,
-        dbName,
-        storeName
-      ).catch(err => console.warn(err))
+      await saveToDB({ url, content: blob }, canIDB, dbName, storeName).catch(
+        err => console.warn(err)
+      )
     }
     // const file = new File([blob], 'url')
-    console.log(_asset, blob)
     const blobURL = self.URL.createObjectURL(blob)
     return loader.load<T>(blobURL, {
       isBlob: true,
-      extensions: url.split('.').slice(-1)[0],
+      extensions: url.split('.').slice(-1)[0]
     })
   } else {
     return loader.load<T>(url).then(async content => {

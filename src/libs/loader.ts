@@ -50,7 +50,6 @@ export class AssetLoader {
   }
 
   load<T>(url: string, loadOptions?: Partial<LoadOptions>): Promise<T> {
-    console.log(url)
     const extension = loadOptions?.isBlob
       ? loadOptions.extensions || ''
       : url.split('.').slice(-1)[0]
@@ -60,7 +59,7 @@ export class AssetLoader {
           loader.load(
             url,
             asset => resolve(asset),
-            xhr => console.log(xhr),
+            // xhr => console.log(xhr),
             error => reject(error)
           )
         )

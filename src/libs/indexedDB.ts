@@ -25,12 +25,12 @@ export function put(
         const store = transaction.objectStore(storeName)
         const req = store.put(data)
 
-        req.onsuccess = event =>
-          console.log('IndexedDB PUT success: ', event.target)
+        // req.onsuccess = event =>
+        //   console.log('IndexedDB PUT success: ', event.target)
         req.onerror = event => reject(event.target)
 
         transaction.oncomplete = event => {
-          console.log(`IndexedDB PUT complete: `, event.target)
+          // console.log(`IndexedDB PUT complete: `, event.target)
           resolve()
         }
         transaction.onerror = error => reject(error)
@@ -52,13 +52,13 @@ export function get(
 
         let data: any
         req.onsuccess = event => {
-          console.log(`IndexedDB GET success: `, event.target)
+          // console.log(`IndexedDB GET success: `, event.target)
           data = (<IDBRequest<any>>event.target).result
         }
         req.onerror = event => reject(event.target)
 
         transaction.oncomplete = event => {
-          console.log(`IndexedDB GET complete: `, event.target)
+          // console.log(`IndexedDB GET complete: `, event.target)
           resolve(data)
         }
         transaction.onerror = event => reject(event.target)
@@ -79,12 +79,12 @@ export function del(
         const req = store.delete(keyValue)
 
         req.onsuccess = event => {
-          console.log(`IndexedDB DELETE success: `, event.target)
+          // console.log(`IndexedDB DELETE success: `, event.target)
         }
         req.onerror = event => reject(event.target)
 
         transaction.oncomplete = event => {
-          console.log(`IndexedDB DELETE complete: `, event.target)
+          // console.log(`IndexedDB DELETE complete: `, event.target)
           resolve()
         }
         transaction.onerror = event => reject(event.target)

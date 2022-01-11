@@ -49,12 +49,9 @@ export class AssetStore {
 
     this.assets = []
     this.initialized = false
-
-    console.log('can worker', this.canWorker)
   }
 
   initialize(): Promise<void> {
-    console.log('initialize')
     const initIDB = () =>
       this.canIDB
         ? initializeIndexedDB(this.dbName, this.assetStoreName).then(
@@ -91,10 +88,7 @@ export class AssetStore {
         }
       })
 
-    return Promise.all([
-      initIDB().then(_ => console.log('fin init idb')),
-      initializeLoader().then(_ => console.log('fin init loader'))
-    ]).then(() => {
+    return Promise.all([initIDB(), initializeLoader()]).then(() => {
       this.initialized = true
     })
   }
@@ -121,7 +115,6 @@ export class AssetStore {
         this.assetStoreName
       ).catch(err => console.warn(err))
       if (asset) {
-        console.log('idb', asset)
         this.setAsset(asset)
         return Promise.resolve(asset.content)
       }
@@ -137,7 +130,6 @@ export class AssetStore {
       }
       this.loaderWorker.postMessage(data)
       const result = await this.getOneMessageFromLoaderWorker('load')
-      console.log('loader worker load', result)
       if (result && result.type === 'load' && result.content) {
         const content = result.content
         const asset = { url, content }
@@ -217,7 +209,6 @@ export class AssetStore {
         clearTimeout(id)
         id = null
       }
-      console.log('one message', data)
       return data
     })
   }
