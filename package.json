@@ -1,8 +1,7 @@
 {
   "name": "@shilaca/three-asset-store",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "loading and saving assets",
-  "private": true,
   "main": "dist/assetStore.js",
   "types": "dist/types/assetStore.d.ts",
   "scripts": {
@@ -22,7 +21,7 @@
   },
   "publishConfig": {
     "access": "restricted",
-    "registry": "https://npm.pkg.github.com/shilaca"
+    "registry": "https://npm.pkg.github.com/"
   },
   "keywords": [],
   "author": "shilaca",
