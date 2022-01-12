@@ -1,6 +1,6 @@
 {
   "name": "@shilaca/three-asset-store",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "loading and saving assets",
   "main": "dist/assetStore.js",
   "types": "dist/types/assetStore.d.ts",

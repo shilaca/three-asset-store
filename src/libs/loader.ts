@@ -59,7 +59,9 @@ export class AssetLoader {
           loader.load(
             url,
             asset => resolve(asset),
-            // xhr => console.log(xhr),
+            xhr => {
+              // console.log(xhr)
+            },
             error => reject(error)
           )
         )
