@@ -18,6 +18,7 @@ import { Asset } from './models/assetStore'
 
 interface AssetStoreSettings {
   dracoDir: string
+  useIDB?: boolean
   dbName?: string
 }
 
@@ -43,8 +44,7 @@ export class AssetStore {
     this.canWorker = 'Worker' in globalThis
     // this.canWorker = false
 
-    this.canIDB = 'indexedDB' in globalThis
-    // this.canIDB = false
+    this.canIDB = !!settings.useIDB && 'indexedDB' in globalThis
     this.dbName = this.settings?.dbName || INDEXED_DATABASE_DEFAULT_NAME
 
     this.assets = []
