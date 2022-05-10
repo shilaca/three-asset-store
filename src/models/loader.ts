@@ -18,7 +18,7 @@ export interface LoaderWorkerMessageInitializeData {
 export interface LoaderWorkerMessageLoadData {
   type: 'load'
   url: string
-  content: any
+  content: unknown
 }
 
 export type LoaderWorkerResponseData =
@@ -31,9 +31,9 @@ export interface LoaderWorkerResponseInitializeData {
 export interface LoaderWorkerResponseLoadData {
   type: 'load'
   url: string
-  content: any
+  content: unknown
 }
 export interface LoaderWorkerResponseErrorData {
   type: 'error'
-  error: any
+  error: unknown
 }

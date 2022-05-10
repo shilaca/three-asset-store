@@ -1,12 +1,11 @@
 import { Loader, ImageBitmapLoader } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
-import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module'
 
 interface _Loader extends Loader {
   load: (
     url: string,
-    onLoad: (asset: any) => void,
+    onLoad: (asset: unknown) => void,
     onProgress?: (xhr: ProgressEvent<EventTarget>) => void,
     onError?: (error: ErrorEvent) => void
   ) => void
@@ -38,9 +37,7 @@ export class AssetLoader {
     if (!this._gltfLoader) {
       const dracoLoader = new DRACOLoader()
       dracoLoader.setDecoderPath(this.dracoDir)
-      this._gltfLoader = new GLTFLoader()
-        .setDRACOLoader(dracoLoader)
-        .setMeshoptDecoder(MeshoptDecoder)
+      this._gltfLoader = new GLTFLoader().setDRACOLoader(dracoLoader)
     }
     return this._gltfLoader
   }
@@ -58,7 +55,7 @@ export class AssetLoader {
         new Promise((resolve, reject) =>
           loader.load(
             url,
-            asset => resolve(asset),
+            asset => resolve(asset as T),
             xhr => {
               // console.log(xhr)
             },

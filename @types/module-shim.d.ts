@@ -1,3 +1,4 @@
+declare module '*?worker'
 declare module '*.glsl'
 declare module '*.vert'
 declare module '*.frag'

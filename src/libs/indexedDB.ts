@@ -16,7 +16,7 @@ function connect(name: string): Promise<IDBDatabase> {
 export function put(
   dbName: string,
   storeName: string,
-  data: any
+  data: unknown
 ): Promise<void> {
   return connect(dbName).then(
     db =>
@@ -42,7 +42,7 @@ export function get(
   dbName: string,
   storeName: string,
   keyValue: string | number | Date | ArrayBufferView | ArrayBuffer | IDBKeyRange
-): Promise<any> {
+): Promise<unknown> {
   return connect(dbName).then(
     db =>
       new Promise((resolve, reject) => {
@@ -50,10 +50,10 @@ export function get(
         const store = transaction.objectStore(storeName)
         const req = store.get(keyValue)
 
-        let data: any
+        let data: unknown
         req.onsuccess = event => {
           // console.log(`IndexedDB GET success: `, event.target)
-          data = (<IDBRequest<any>>event.target).result
+          data = (<IDBRequest<unknown>>event.target).result
         }
         req.onerror = event => reject(event.target)
 
