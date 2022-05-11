@@ -1,5 +1,5 @@
 import { AssetLoader } from './libs/loader'
-import Worker from './workers/loader.worker?worker'
+import Worker from './workers/loader.worker?worker&inline'
 import {
   LoaderWorkerMessageDataType,
   LoaderWorkerMessageData,
@@ -80,13 +80,12 @@ export class AssetStore {
               settings: this.settings
             }
             this.loaderWorker.postMessage(data)
-            this.getOneMessageFromLoaderWorker('initialize')
+            return this.getOneMessageFromLoaderWorker('initialize')
               .then(_ => resolve())
               .catch(error => reject(error))
           } else {
             throw new Error('Failed to initialize worker.')
           }
-          return resolve()
         } catch (error) {
           return reject(error)
         }

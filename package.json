@@ -12,7 +12,7 @@
     "import": "./dist/assetStore.es.js",
     "require": "./dist/assetStore.umd.js"
   },
-  "types": "./dist/types/assetStore.d.ts",
+  "types": "./types/assetStore.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b ./src/tsconfig.json && vite build",

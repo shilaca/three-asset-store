@@ -12,7 +12,9 @@
     "sourceMap": false,
     "composite": true,
     "rootDir": "./src",
-    "outDir": "dist"
+    "outDir": "dist",
+    "isolatedModules": true,
+    "types": ["vite/client"]
   },
   "files": ["@types/module-shim.d.ts"],
   "include": ["src"],
