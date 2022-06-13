@@ -29,7 +29,7 @@ function initIDB() {
     : Promise.resolve()
 }
 
-function errorData(error: any): LoaderWorkerResponseErrorData {
+function errorData(error: unknown): LoaderWorkerResponseErrorData {
   return {
     type: 'error',
     error
@@ -42,6 +42,15 @@ function response(
   data: LoaderWorkerResponseData,
   transfer: Transferable[] = []
 ): void {
+  /**
+   * Build Error
+   * error TS2769: No overload matches this call.
+   * Overload 1 of 2, '(message: any, targetOrigin: string, transfer?: Transferable[] | undefined): void', gave the following error.
+   * Argument of type 'Transferable[]' is not assignable to parameter of type 'string'. Overload 2 of 2, '(message: any, options?: WindowPostMessageOptions | undefined): void', gave the following error.
+   * Type 'Transferable[]' has no properties in common with type 'WindowPostMessageOptions'.
+   */
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const options: any = transfer
   ctx.postMessage(data, options)
 }
@@ -59,7 +68,7 @@ ctx.addEventListener('message', async (event: MessageEvent) => {
     case 'load':
       if (loader) {
         try {
-          const content = await loadAsset<any>(
+          const content = await loadAsset(
             data.url,
             loader,
             canIDB,

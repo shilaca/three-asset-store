@@ -1,5 +1,5 @@
 import { AssetLoader } from './libs/loader'
-import Worker from './workers/loader.worker'
+import Worker from './workers/loader.worker?worker&inline'
 import {
   LoaderWorkerMessageDataType,
   LoaderWorkerMessageData,
@@ -27,7 +27,7 @@ interface LoadParameters {
 }
 
 export class AssetStore {
-  private assets: Asset<any>[]
+  private assets: Asset<unknown>[]
   private initialized: boolean
 
   private canWorker: boolean
@@ -70,19 +70,22 @@ export class AssetStore {
         }
         try {
           this.loaderWorker = new Worker()
-          this.loaderWorker.addEventListener(
-            'message',
-            this.ordinaryOnMessageFormLoaderWorker
-          )
-          const data: LoaderWorkerMessageInitializeData = {
-            type: 'initialize',
-            settings: this.settings
+          if (this.loaderWorker) {
+            this.loaderWorker.addEventListener(
+              'message',
+              this.ordinaryOnMessageFormLoaderWorker
+            )
+            const data: LoaderWorkerMessageInitializeData = {
+              type: 'initialize',
+              settings: this.settings
+            }
+            this.loaderWorker.postMessage(data)
+            return this.getOneMessageFromLoaderWorker('initialize')
+              .then(_ => resolve())
+              .catch(error => reject(error))
+          } else {
+            throw new Error('Failed to initialize worker.')
           }
-          this.loaderWorker.postMessage(data)
-          this.getOneMessageFromLoaderWorker('initialize')
-            .then(_ => resolve())
-            .catch(error => reject(error))
-          return
         } catch (error) {
           return reject(error)
         }
@@ -131,7 +134,7 @@ export class AssetStore {
       this.loaderWorker.postMessage(data)
       const result = await this.getOneMessageFromLoaderWorker('load')
       if (result && result.type === 'load' && result.content) {
-        const content = result.content
+        const content = result.content as T
         const asset = { url, content }
         this.setAsset(asset)
         // return this.saveAssetToDB(asset).then(_ => content)

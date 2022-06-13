@@ -48,9 +48,9 @@ export async function getFromDB<T>(
   storeName: string
 ): Promise<Asset<T>> {
   if (canIDB) {
-    const asset = await IDB.get(dbName, storeName, url).catch(error =>
+    const asset = (await IDB.get(dbName, storeName, url).catch(error =>
       Promise.reject(error)
-    )
+    )) as Asset<T>
     return Promise.resolve(asset)
   } else {
     return Promise.reject(new Error(`IndexedDB is not available.`))
