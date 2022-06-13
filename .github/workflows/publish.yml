@@ -12,7 +12,7 @@ on:
 
 jobs:
   publish:
-    name: Setup
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: build
-        run: npm run build:prod
+        run: npm run build
 
       - name: publish
         run: npx can-npm-publish --verbose && npm publish || echo "No need to publish"
